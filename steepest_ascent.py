@@ -65,6 +65,7 @@ Returns result object containing optimal solution, objective objective, solve ti
             print('Objective: {}'.format(obj_value))
             print('Steepness: {}'.format(steepness))
             print('Step length: {}'.format(alpha))
+            # print('Step Direction: {}'.format(descent_direction))
         
         t4 = time.time()
         obj_value = P.c.dot(x_current)
@@ -99,6 +100,7 @@ Returns result object containing optimal solution, objective objective, solve ti
     t6 = time.time()
     total_time = t6 - t1   
     print('Total time for steepest-descent scheme: {}'.format(total_time))
+    print('Descent circuits: ', descent_circuits)
         
     return result(status=0, x=x_current, 
                   obj=P.c.dot(x_current), n_iters=len(step_sizes), solve_time=total_time,
