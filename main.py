@@ -8,7 +8,7 @@ from polyhedron import Polyhedron
 from steepest_ascent import steepest_descent_augmentation_scheme as sdac
 
 
-def main(A,B,b,d,c,x_feasible, results_dir='results',
+def main(B,d,c,x_feasible, A = None, b = None, results_dir='results',
          max_time=300, sd_method='dual_simplex', reset=False):
     
     print('Building polyhedron...')
@@ -34,7 +34,7 @@ def main(A,B,b,d,c,x_feasible, results_dir='results',
 
 if __name__ == "__main__":   
     #node arc incidence matrix
-    M = 100
+    M = 1000
 
     ####typical steffen example####
     # A = np.array([[1,-1,0,0],[1,0,-1,0],[0,1,-1,0],[0,1,0,-1],[0,0,1,-1],[-1,0,0,1]]).transpose()
@@ -59,18 +59,60 @@ if __name__ == "__main__":
     # A = net.add_slack_arcs(A)
     # B = net.construct_B(10,6,'True')
 
-    A = np.array([[1,-1,0,0,0,0],[1,0,0,-1,0,0],[0,1,-1,0,0,0],[0,1,0,-1,0,0],[0,0,1,0,-1,0],[0,0,1,0,0,-1],[0,0,-1,1,0,0],[0,0,0,1,-1,0],[0,0,0,0,1,-1]]).transpose()
+    ####GAP example####
+    # A = np.array([[1,-1,0,0,0,0],[1,0,0,-1,0,0],[0,1,-1,0,0,0],[0,1,0,-1,0,0],[0,0,1,0,-1,0],[0,0,1,0,0,-1],[0,0,-1,1,0,0],[0,0,0,1,-1,0],[0,0,0,0,1,-1]]).transpose()
+    # #flow balance and arc cap values (x arcs, s^- arcs, s^+ arcs)
+    # b=np.array([0,0,0,0,0,0]).transpose()
+    # d=np.array([0,0,0,0,0,0,0,0,0,6,6,3,7,2,7,10,2,4,0,0,0,0,0,0,0,0,0,0,0,0]).transpose()
+    # c = np.array([0,0,0,0,0,0,0,0,0,M,M,M,M,M,-1,-1,M,M,M,M,M]).transpose()
+    # feasible = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+
+    # # print(len(A[1]))
+
+    # A = net.add_slack_arcs(A)
+    # print(A)
+    # B = net.construct_B(9,6,'True')
+
+    ###Testing PFP
+    # A = np.array([[1,-1,0,0,0,0],[1,0,0,-1,0,0],[0,1,-1,0,0,0],[0,1,0,-1,0,0],[0,0,1,0,-1,0],[0,0,1,0,0,-1],[0,0,-1,1,0,0],[0,0,0,1,-1,0],[0,0,0,0,1,-1]]).transpose()
+    # #flow balance and arc cap values (x arcs, s^- arcs, s^+ arcs)
+    # b=np.array([0,0,0,0,0,0]).transpose()
+    # d=np.array([0,0,0,0,0,0,0,0,0,6,6,3,7,2,7,10,2,4,0,0,0,0,0,0,0,0,0,0,0,0]).transpose()
+    # c = np.array([M,M,M,M,M,M,M,M,M,M,M,M,M,M,-1,-1,M,M,M,M,M]).transpose()
+    # feasible = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+
+    # # print(len(A[1]))
+
+    # A = net.add_slack_arcs(A)
+    # print(A)
+    # B = net.construct_B(9,6,'True')
+
+
+    ###Testing Hungarian Method
+    M = 82+83+69+92+77+37+49+92+11+69+5+86+8+9+98+23+8
+    A = np.array([[1,0,0,0,-1,0,0,0],[1,0,0,0,0,-1,0,0],[1,0,0,0,0,0,-1,0],[1,0,0,0,0,0,0,-1],[0,1,0,0,-1,0,0,0],[0,1,0,0,0,-1,0,0],[0,1,0,0,0,0,-1,0],[0,1,0,0,0,0,0,-1],
+                  [0,0,1,0,-1,0,0,0],[0,0,1,0,0,-1,0,0],[0,0,1,0,0,0,-1,0],[0,0,1,0,0,0,0,-1],[0,0,0,1,-1,0,0,0],[0,0,0,1,0,-1,0,0],[0,0,0,1,0,0,-1,0],[0,0,0,1,0,0,0,-1]]).transpose()
     #flow balance and arc cap values (x arcs, s^- arcs, s^+ arcs)
-    b=np.array([0,0,0,0,0,0]).transpose()
-    d=np.array([0,0,0,0,0,0,0,0,0,6,6,3,7,2,7,10,2,4,0,0,0,0,0,0,0,0,0,0,0,0]).transpose()
-    c = np.array([0,0,0,0,0,0,0,0,0,M,M,M,M,M,-1,-1,M,M,M,M,M]).transpose()
-    feasible = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    b=np.array([1,1,1,1,-1,-1,-1,-1]).transpose()
+    d=np.array([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+                0,0,0,0,0,0,0,0,
+                0,0,0,0,0,0,0,0]).transpose()
+    c=np.array([82,77,11,8,83,37,69,9,69,49,5,98,92,92,86,23,
+                M,M,M,M,-1,-1,-1,-1,
+                -1,-1,-1,-1,M,M,M,M]).transpose()
+    ###no assignments solution
+    # feasible = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    #             1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1]
+    ###initial assignments from HM example
+    feasible = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1]
 
     # print(len(A[1]))
 
     A = net.add_slack_arcs(A)
-    print(A)
-    B = net.construct_B(9,6,'True')
+    # print(A)
+    B = net.construct_B(16,8,'True')
 
     ####third example####
     # A = np.array([[1,-1,0,0,0,0,0,0,0,0,0,0],[1,0,0,0,0,0,0,-1,0,0,0,0],[0,1,-1,0,0,0,0,0,0,0,0,0],[0,1,0,0,0,-1,0,0,0,0,0,0],[0,0,1,-1,0,0,0,0,0,0,0,0],
@@ -87,4 +129,4 @@ if __name__ == "__main__":
     # A = net.add_slack_arcs(A)
     # B = net.construct_B(20,12,'True')
     
-    main(A,B,b,d,c,feasible,'results', 300, 'dual_simplex', 'False')
+    main(B,d,c,feasible, A, b)
