@@ -39,19 +39,3 @@ def construct_B(columns, rows, x_arc_ub = 'False'):
 	B = np.concatenate((B, -1*s_minus_arcs), axis = 0)
 
 	return B;
-
-
-###testing
-# M = 100
-# A = np.array([[-1,1,0,0],[-1,0,1,0],[0,-1,1,0],[0,-1,0,1],[0,0,-1,1],[1,0,0,-1]]).transpose()
-# #flow balance and arc cap values (x arcs, s^+ arcs, s^- arcs)
-# b=np.array([0,0,0,0]).transpose()
-# d=np.array([0,0,0,0,0,0,2,4,3,1,5, math.inf,0,0,0,0,0,0,0,0]).transpose()
-# c = np.array([0,0,0,0,0,-1,M,M,M,M,M,M,M,M]).transpose()
-
-# print('before slack vars: ',A)
-# A = add_slack_arcs(A)
-# print('after slack vars: ',A)
-
-# B = construct_B(6,4, 'True')
-# print('inequalities: ',B)
